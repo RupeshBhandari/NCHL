@@ -1,0 +1,30 @@
+# Python bytecode files
+*.pyc
+*.pyo
+__pycache__/
+
+# Virtual environment
+venv/
+.env/
+
+# Configuration files
+config/
+
+# Log files
+*.log
+
+# IDE and editor specific files
+.vscode/
+.idea/
+
+# Miscellaneous
+.DS_Store
+*.swp
+
+# Backup files
+*.bak
+*.tmp
+
+# Secrets (ensure sensitive files are not committed)
+*.env
+
