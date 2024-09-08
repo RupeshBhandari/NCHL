@@ -54,7 +54,7 @@ def main():
         
         # Prepare the payload with the signature added
         payload = prepare_payload(transaction_details=Config.transaction_details, 
-                                  signature=signature)
+                                signature=signature)
         
         # Send the POST request
         response = send_request(
@@ -68,6 +68,7 @@ def main():
         # Log the response for debugging
         logger.info(f"Response status code: {response.status_code}")
         logger.info(f"Response text: {response.text}")
+        print(json.dumps(response.json(), indent=4))
 
     except Exception as e:
         logger.error(f"An error occurred: {e}")
