@@ -1,7 +1,6 @@
 import base64
 import logging
 from OpenSSL import crypto
-from typing import Dict
 from config import Config
 
 # Configure logging
@@ -15,7 +14,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-def create_message(transaction_details: Dict[str, str]) -> str:
+def create_message(transaction_details: dict[str, str]) -> bytes:
     """
     Create a message string by concatenating transaction details in 'KEY=VALUE' format.
     
@@ -28,7 +27,7 @@ def create_message(transaction_details: Dict[str, str]) -> str:
     try:
         # Create the message string by joining key-value pairs as "KEY=VALUE"
         message = ",".join(f"{key.upper()}={value}" for key, value in transaction_details.items())
-        logger.info(f"Message")
+        logger.info(f"Message: {message}")
         # Encode the message to bytes using UTF-8
         return message.encode('utf-8')
     except Exception as e:
@@ -58,6 +57,7 @@ def sign_message(message: bytes, pfx_path: str, pfx_password: bytes) -> str:
         
         # Sign the message using the private key and SHA-256 algorithm
         signature = crypto.sign(pkey, message, "sha256")
+        logger.info(f"Signature: {base64.b64encode(signature).decode('utf-8')}")
         
         # Encode the signature to Base64 and return it
         return base64.b64encode(signature).decode('utf-8')

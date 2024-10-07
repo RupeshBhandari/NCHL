@@ -6,7 +6,7 @@ import requests
 import logging
 
 # Add the project root directory to the system path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.append(os.path.abspath(path=os.path.join(os.path.dirname(p=__file__), '..')))
 from config import Config
 from signing import create_message, sign_message
 
@@ -15,16 +15,16 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler(Config.log_file),
+        logging.FileHandler(filename=Config.log_file),
         logging.StreamHandler()  # Optional: also log to the console
     ]
 )
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(name=__name__)
 
 def prepare_payload(transaction_details: dict, signature: str) -> str:
     """Prepare the payload with the signature added."""
     transaction_details["token"] = signature
-    return json.dumps(transaction_details)
+    return json.dumps(obj=transaction_details)
 
 def send_request(method: str, url: str, headers: dict, payload: str, auth: tuple[str, str]) -> requests.Response:
     """Send an HTTP request and return the response."""
@@ -39,14 +39,14 @@ def send_request(method: str, url: str, headers: dict, payload: str, auth: tuple
         response.raise_for_status()
         return response
     except requests.RequestException as e:
-        logger.error(f"Request failed: {e}")
+        logger.error(msg=f"Request failed: {e}")
         raise
 
-def main():
+def main() -> None:
     try:
         # Create the message and sign it
-        message = create_message(Config.transaction_details)
-        signature = sign_message(
+        message: bytes = create_message(transaction_details=Config.transaction_details)
+        signature: str = sign_message(
             message=message,
             pfx_password=Config.pfx_password,
             pfx_path=Config.pfx_path
@@ -64,13 +64,15 @@ def main():
             payload=payload,
             auth=Config.auth
         )
-        
+
+        print(json.dumps(obj=response.json(), indent=4))
         # Log the response for debugging
-        logger.info(f"Response status code: {response.status_code}")
-        logger.info(f"Response text: {response.text}")
+        logger.info(msg=f"Token: {response.status_code}")
+        logger.info(msg=f"Response status code: {payload}")
+        logger.info(msg=f"Response text: {response.text}")
 
     except Exception as e:
-        logger.error(f"An error occurred: {e}")
+        logger.error(msg=f"An error occurred: {e}")
 
 if __name__ == "__main__":
     main()
