@@ -54,7 +54,7 @@ def main() -> None:
         
         # Prepare the payload with the signature added
         payload = prepare_payload(transaction_details=Config.transaction_details, 
-                                  signature=signature)
+                                signature=signature)
         
         # Send the POST request
         response = send_request(
